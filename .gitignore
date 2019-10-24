@@ -1,0 +1,7 @@
+node_modules
+titles
+videos
+torrents
+
+*.swp
+*.swo

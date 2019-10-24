@@ -1,0 +1,31 @@
+{
+  "name": "moverename2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cli-progress": "^3.3.1",
+    "parse-torrent": "^7.0.1",
+    "slugify": "^1.3.5",
+    "yargs": "^14.2.0"
+  },
+  "scripts": {
+    "test": "",
+    "start": "nodemon --watch src src/rename.js"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weymoz/moverename2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/weymoz/moverename2/issues"
+  },
+  "homepage": "https://github.com/weymoz/moverename2#readme"
+}
