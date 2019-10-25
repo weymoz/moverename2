@@ -30,6 +30,7 @@ const getFilesFromTorrent = (exports.getFilesFromTorrent = async torrentPath => 
 
 const getAllFiles = (exports.getAllFiles = path => async () =>
   await readDir(path));
+
 const getAllTorrents = (exports.getAllTorrents = getAllFiles(TORRENTS_PATH));
 
 const absPath = (exports.absPath = appPath => file => path.join(appPath, file));
@@ -51,6 +52,16 @@ const copy = (exports.copy = async ({src, dest}) => {
   });
 });
 
+const copy2 = exports.copy2 = async ({src, dest}) => {
+  return new Promise((resolve, reject) => {
+    const srcStream = fs.createReadStream(src);
+    const destStream = fs.createWriteStream(dest);
+    srcStream.pipe(destStream);
+    destStream.on('finish', resolve.bind(null, dest));
+    destStream.on('error', reject.bind(null, src));
+  });
+};
+
 const filenameWithoutExt = (exports.filenameWithoutExt = filePath =>
   path.basename(filePath, path.extname(filePath)));
 
@@ -59,7 +70,7 @@ const date = () => {
   return `${d.getDate()}.${d.getDay()}`;
 };
 
-const number = index => index.toString().padStart(4, '0');
+const number = index => ( index + 1 ).toString().padStart(4, '0');
 
 const destFileName = (exports.destFileName = (file, index) => {
   const {src, torrent} = file;
@@ -76,9 +87,12 @@ const destFileName = (exports.destFileName = (file, index) => {
     .join('-');
 
   const srcExt = path.extname(src);
+
   let fileName = `${date()}.${number(
     index,
   )}-${GENRE}-${torrentFilename}-${srcFilename}`;
+
+  fileName = fileName.length > 90 ? fileName.slice(0, 89) : fileName;
 
   fileName = destAbsPath(fileName);
   fileName = `${fileName}.${srcExt}`;
@@ -97,6 +111,7 @@ const filterFiles = (exports.filterFiles = file => {
   const ext = path.extname(file.src).slice(1);
   const filter = !(
     ext === 'jpg' ||
+    ext === 'jpeg' ||
     ext === 'gif' ||
     ext === 'png' ||
     ext === 'rar' ||
@@ -112,14 +127,27 @@ const title = (exports.title = ({torrent, src}, index) => {
   return `${date()}.${number(index)}-${title}@@@\n`;
 });
 
-const writeTitles = (exports.writeTitles = files => {
-  fs.truncate(TITLES_PATH, err => {
-    if (err) throw err;
-    files.map(({title}) =>
-      fs.appendFile(TITLES_PATH, title, err => {
-        if (err) throw err;
-        console.log(`${title} was written to ${TITLES_PATH}`);
-      }),
-    );
+const cleanFile = filePath => {
+  return new Promise(resolve => {
+    fs.truncate(TITLES_PATH, err => {
+      if (err) throw err;
+      console.log(`${filePath} was cleaned`);
+      resolve(filePath);
+    });
   });
+};
+
+const writeTitle = ({title}) => {
+  return new Promise(resolve => {
+    fs.appendFile(TITLES_PATH, title, err => {
+      if (err) throw err;
+      console.log(`${title} was written to ${TITLES_PATH}`);
+      resolve(title);
+    });
+  });
+};
+
+const writeTitles = (exports.writeTitles = async files => {
+  await cleanFile(TITLES_PATH);
+  return Promise.all(files.map(writeTitle));
 });
