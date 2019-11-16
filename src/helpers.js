@@ -115,6 +115,9 @@ const filterFiles = (exports.filterFiles = file => {
     ext === 'gif' ||
     ext === 'png' ||
     ext === 'rar' ||
+    ext === 'txt' ||
+    ext === 'nfo' ||
+    ext === 'url' ||
     ext === 'zip'
   );
   return filter;
