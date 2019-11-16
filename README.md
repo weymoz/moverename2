@@ -15,12 +15,13 @@ or in the **src/cofig.js**
 
 ### Command line example
 ```
-node rename.js -t "/home/alul/rtorrent/watch/torrents"  -s "/home/alul/rtorrent/download/torrents" -d "/fo2/fj/upl/vids" --ti "/fo2/fj/upl/inf/titles.txt"
+node rename.js -g comedy -t "/home/alul/rtorrent/watch/torrents"  -s "/home/alul/rtorrent/download/torrents" -d "/fo2/fj/upl/vids" --ti "/fo2/fj/upl/inf/titles.txt"
 
 ```
 
 ### Command line options
 ```
+  -g - genre of the torrent
   -t - path to the folder with torrent files
   -s - path to the folder where torrents are saved
   -d - path to the folder were torrent content should be saved
